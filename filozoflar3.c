@@ -6,7 +6,7 @@
 
 #define PH_COUNT 5
 
-sem_t chair;
+sem_t unlocked_chair;
 sem_t chopstick[PH_COUNT];
 
 void * philosopher(void *);
@@ -32,7 +32,7 @@ int main()
 
 void initialize()
 {
-    sem_init(&chair,0,PH_COUNT-1);
+    sem_init(&unlocked_chair,0,PH_COUNT-1);
 	
     int i;
 	for(i=0;i<PH_COUNT;i++)
@@ -46,7 +46,7 @@ void * philosopher(void * arg)
     int left_stick = ph_index;
     int right_stick = (ph_index+1)%PH_COUNT;
 
-	sem_wait(&chair);
+	sem_wait(&unlocked_chair);
     sit(ph_index);
 
     if(ph_index%2==0)
@@ -69,7 +69,7 @@ void * philosopher(void * arg)
 
 	sem_post(&chopstick[(ph_index+1)%PH_COUNT]);
 	sem_post(&chopstick[ph_index]);
-	sem_post(&chair);
+	sem_post(&unlocked_chair);
     think(ph_index);
 }
 
